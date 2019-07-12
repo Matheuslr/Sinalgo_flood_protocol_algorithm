@@ -23,7 +23,7 @@ public class PingPongNode extends Node {
 				this.local_r = pkt.getR();
 				this.local_g = pkt.getG();
 				this.local_b = pkt.getB();
-				
+				System.out.println(pkt.toString());
 				this.setColor(new Color(local_r, local_g, local_b));
 				
 				UniformDistribution ud = new UniformDistribution(0, 255);
@@ -33,6 +33,7 @@ public class PingPongNode extends Node {
 				pkt.setB((int) ud.nextSample());
 				
 				PingPongTimer timer = new PingPongTimer(pkt);
+				
 				timer.startRelative(1,this);
 			}
 		}

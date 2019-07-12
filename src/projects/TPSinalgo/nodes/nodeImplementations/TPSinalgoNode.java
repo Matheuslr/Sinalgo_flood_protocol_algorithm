@@ -3,8 +3,6 @@ package projects.TPSinalgo.nodes.nodeImplementations;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import projects.PingPong.nodes.messages.PingPongMessage;
-import projects.PingPong.nodes.timers.PingPongTimer;
 import projects.TPSinalgo.nodes.messages.TPSinalgoMessageRoute;
 import projects.TPSinalgo.nodes.messages.TPSinalgoMessageTemperature;
 import projects.TPSinalgo.nodes.timers.TPSinalgoTimer;
@@ -12,7 +10,6 @@ import projects.TPSinalgo.nodes.timers.TPSinalgoTimerTemperature;
 import sinalgo.configuration.WrongConfigurationException;
 import sinalgo.gui.transformation.PositionTransformation;
 import sinalgo.nodes.Node;
-import sinalgo.nodes.Node.NodePopupMethod;
 import sinalgo.nodes.messages.Inbox;
 import sinalgo.nodes.messages.Message;
 
@@ -22,6 +19,7 @@ public class TPSinalgoNode extends Node {
 	private int sinkID ;
 	private int nextHop ;
 	private int numberOfHops;
+	private int TTL; //Implementation of a time to live.
 
 	@Override
 	public void handleMessages(Inbox inbox) {
@@ -36,9 +34,10 @@ public class TPSinalgoNode extends Node {
 					this.sinkID = msg.getSinkID();
 					this.numberOfHops = msg.getNumberOfHops() + 1;
 					this.nextHop = inbox.getSender().ID;
+					this.TTL = 0;
 					
 					
-					TPSinalgoMessageRoute routeMsg = new TPSinalgoMessageRoute(this.sinkID, this.nextHop, this.numberOfHops);
+					TPSinalgoMessageRoute routeMsg = new TPSinalgoMessageRoute(this.sinkID, this.nextHop, this.numberOfHops, this.TTL);
 					TPSinalgoTimer timer = new TPSinalgoTimer(routeMsg);
 					timer.startRelative(1,this);
 					
@@ -51,9 +50,15 @@ public class TPSinalgoNode extends Node {
 				TPSinalgoMessageTemperature msg = (TPSinalgoMessageTemperature) message;
 				boolean validationSinkId = msg.getNextHop() != this.sinkID;
 				if(validationSinkId) {
-					TPSinalgoMessageTemperature temperatureMsg = new TPSinalgoMessageTemperature(msg.getTemperature(), this.nextHop);
-					TPSinalgoTimerTemperature timer = new TPSinalgoTimerTemperature(temperatureMsg);
-					timer.startRelative(1,this);
+					if(msg.getTTL() == 6) {
+						System.out.println("Package die!");
+					}else {
+						this.TTL = (msg.getTTL() + 1);
+						TPSinalgoMessageTemperature temperatureMsg = new TPSinalgoMessageTemperature(msg.getTemperature(), this.nextHop, this.TTL);
+						TPSinalgoTimerTemperature timer = new TPSinalgoTimerTemperature(temperatureMsg);
+						timer.startRelative(1,this);
+					}
+					
 				} else {
 					System.out.println(msg.toString());
 				}
@@ -68,7 +73,7 @@ public class TPSinalgoNode extends Node {
 	public void sendMessage() {
 
 		Double temperature = generateTemperature(0, 30);
-		TPSinalgoMessageTemperature msg = new TPSinalgoMessageTemperature(temperature, this.nextHop);
+		TPSinalgoMessageTemperature msg = new TPSinalgoMessageTemperature(temperature, this.nextHop, this.TTL);
 		TPSinalgoTimerTemperature timer = new TPSinalgoTimerTemperature(msg);
 		timer.startRelative(1,this);
 	}
@@ -78,7 +83,7 @@ public class TPSinalgoNode extends Node {
 		this.sinkID = this.ID;
 		this.nextHop = -1;
 		this.numberOfHops = 0;
-		TPSinalgoMessageRoute msg = new TPSinalgoMessageRoute(this.sinkID, this.nextHop, this.numberOfHops);
+		TPSinalgoMessageRoute msg = new TPSinalgoMessageRoute(this.sinkID, this.nextHop, this.numberOfHops, this.TTL);
 		TPSinalgoTimer timer = new TPSinalgoTimer(msg);
 		timer.startRelative(1, this);
 	}
@@ -93,11 +98,13 @@ public class TPSinalgoNode extends Node {
 
 	
 
+	
 	@Override
 	public String toString() {
-		return "TPSinalgoNode [sinkID=" + sinkID + ", nextHop=" + nextHop + ", numberOfHops=" + numberOfHops
-				+ "]";
+		return "TPSinalgoNode [sinkID=" + sinkID + ", nextHop=" + nextHop + ", numberOfHops=" + numberOfHops + ", TTL="
+				+ TTL + "]";
 	}
+	
 	@Override
 	public void preStep() {
 		// TODO Auto-generated method stub
@@ -109,6 +116,7 @@ public class TPSinalgoNode extends Node {
 		 sinkID = this.ID;
 		 nextHop = 0;
 		 numberOfHops = Integer.MAX_VALUE;
+		 TTL = 0;
 	}
 
 	@Override
@@ -132,7 +140,7 @@ public class TPSinalgoNode extends Node {
 	@Override
 	public void draw(Graphics g, PositionTransformation pt, boolean highlight) {
 		String text = ""+this.ID;
-		super.drawNodeAsSquareWithText(g, pt, highlight, text, 12, Color.RED);
+		super.drawNodeAsSquareWithText(g, pt, highlight, text, 12, Color.CYAN);
 	}
 	
 	

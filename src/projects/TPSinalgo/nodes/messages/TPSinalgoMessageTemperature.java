@@ -1,30 +1,36 @@
 package projects.TPSinalgo.nodes.messages;
 
-import projects.TPSinalgo.nodes.nodeImplementations.TPSinalgoNode;
-import sinalgo.nodes.Node;
 import sinalgo.nodes.messages.Message;
 
 public class TPSinalgoMessageTemperature extends Message {
 
 	private Double temperature;
 	private int nextHop;
+	private int TTL ; 
 	
 	
 	
-	public TPSinalgoMessageTemperature(Double temperature, int nextHop) {
+
+
+	public TPSinalgoMessageTemperature(Double temperature, int nextHop, int TTL) {
 		super();
 		this.temperature = temperature;
 		this.nextHop = nextHop;
+		this.TTL = TTL;
 	}
+
+
 
 
 
 	@Override
 	public Message clone() {
 		
-		return new TPSinalgoMessageTemperature(temperature,nextHop);
+		return new TPSinalgoMessageTemperature(temperature,nextHop, TTL);
 		
 	}
+
+
 
 
 
@@ -34,9 +40,13 @@ public class TPSinalgoMessageTemperature extends Message {
 
 
 
+
+
 	public void setTemperature(Double temperature) {
 		this.temperature = temperature;
 	}
+
+
 
 
 
@@ -46,17 +56,47 @@ public class TPSinalgoMessageTemperature extends Message {
 
 
 
+
+
 	public void setNextHop(int nextHop) {
 		this.nextHop = nextHop;
 	}
 
 
 
+
+
+	public int getTTL() {
+		return TTL;
+	}
+
+
+
+
+
+	public void setTTL(int tTL) {
+		TTL = tTL;
+	}
+
+
+
+
 	@Override
 	public String toString() {
-		return "TPSinalgoMessageTemperature [temperature=" + temperature + ", nextHop=" + nextHop + "]";
+		return "TPSinalgoMessageTemperature [temperature=" + temperature + ", nextHop=" + nextHop + ", TTL=" + TTL
+				+ "]";
 	}
-	
-	
 
+
+
+
+
+	
+	
+	
+	
 }
+
+
+
+	

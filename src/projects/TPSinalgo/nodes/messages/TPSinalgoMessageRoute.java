@@ -1,6 +1,5 @@
 package projects.TPSinalgo.nodes.messages;
 
-import sinalgo.nodes.Node;
 import sinalgo.nodes.messages.Message;
 
 public class TPSinalgoMessageRoute extends Message {
@@ -9,24 +8,38 @@ public class TPSinalgoMessageRoute extends Message {
 	private int sinkID;
 	private int nextHop;
 	private int numberOfHops;
+	private int TTL; 
 
 	
 	
-	public TPSinalgoMessageRoute(int sinkID, int nextHop, int numberOfHops) {
+	
+	
+
+
+	public TPSinalgoMessageRoute(int sinkID, int nextHop, int numberOfHops, int TTL) {
 		super();
 		this.sinkID = sinkID;
 		this.nextHop = nextHop;
 		this.numberOfHops = numberOfHops;
+		this.TTL = TTL;
 	}
+
+
+
+
 
 
 
 	@Override
 	public Message clone() {
 		
-		return new TPSinalgoMessageRoute(sinkID, nextHop, numberOfHops);
+		return new TPSinalgoMessageRoute(sinkID, nextHop, numberOfHops, TTL);
 		
 	}
+
+
+
+
 
 
 
@@ -36,9 +49,17 @@ public class TPSinalgoMessageRoute extends Message {
 
 
 
+
+
+
+
 	public void setSinkID(int sinkID) {
 		this.sinkID = sinkID;
 	}
+
+
+
+
 
 
 
@@ -48,9 +69,17 @@ public class TPSinalgoMessageRoute extends Message {
 
 
 
+
+
+
+
 	public void setNextHop(int nextHop) {
 		this.nextHop = nextHop;
 	}
+
+
+
+
 
 
 
@@ -60,10 +89,52 @@ public class TPSinalgoMessageRoute extends Message {
 
 
 
+
+
+
+
 	public void setNumberOfHops(int numberOfHops) {
 		this.numberOfHops = numberOfHops;
 	}
+
+
+
+
+
+
+
+	public int getTTL() {
+		return TTL;
+	}
+
+
+
+
+
+
+
+	public void setTTL(int tTL) {
+		TTL = tTL;
+	}
+
+
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "TPSinalgoMessageRoute [sinkID=" + sinkID + ", nextHop=" + nextHop + ", numberOfHops=" + numberOfHops
+				+ ", TTL=" + TTL + "]";
+	}
 	
+	
+	
+
+
+
+
 	
 
 

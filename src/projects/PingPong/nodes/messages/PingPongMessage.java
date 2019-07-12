@@ -41,6 +41,11 @@ public class PingPongMessage extends Message {
 	public void setB(int b) {
 		this.b = b;
 	}
+
+	@Override
+	public String toString() {
+		return "PingPongMessage [r=" + r + ", g=" + g + ", b=" + b + "]";
+	}
 	
 	
 	
